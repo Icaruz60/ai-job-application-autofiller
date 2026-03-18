@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Autofill — Settings</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Settings</h1>
+
+    <label for="provider">AI Provider</label>
+    <select id="provider">
+      <option value="claude">Claude (Anthropic)</option>
+      <option value="openai">ChatGPT (OpenAI)</option>
+    </select>
+
+    <label for="apiKey" id="apiKeyLabel">Anthropic API Key</label>
+    <input type="password" id="apiKey" placeholder="sk-..." autocomplete="off">
+
+    <label for="profile">Profile Data</label>
+    <textarea id="profile" placeholder="Paste your full profile here (name, email, education, skills, resume text, etc.)"></textarea>
+
+    <button id="save">Save</button>
+    <span id="status"></span>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
