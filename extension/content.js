@@ -156,9 +156,15 @@ function scanFields() {
 // ─── Synthetic events ────────────────────────────────────────────────────────
 
 function dispatchEvents(el) {
+  // Fire focus first — many frameworks only mark a field as "touched" after
+  // a real focus event, which is what causes the red-border validation state
+  // when we skip it. Without this the field looks dirty-but-never-focused.
+  el.dispatchEvent(new Event("focus", { bubbles: true }));
+  el.dispatchEvent(new Event("focusin", { bubbles: true }));
   el.dispatchEvent(new Event("input", { bubbles: true }));
   el.dispatchEvent(new Event("change", { bubbles: true }));
   el.dispatchEvent(new Event("blur", { bubbles: true }));
+  el.dispatchEvent(new Event("focusout", { bubbles: true }));
 }
 
 // ─── Fill logic ──────────────────────────────────────────────────────────────

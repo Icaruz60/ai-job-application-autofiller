@@ -4,17 +4,43 @@ importScripts("profile.js", "api.js");
 // ─── System prompt builder ───────────────────────────────────────────────────
 
 function buildSystemPrompt(profileText) {
+  const today = new Date();
+  const iso = today.toISOString().split("T")[0]; // YYYY-MM-DD
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const yyyy = today.getFullYear();
+
   return `You are an assistant filling out job application forms. Here is the applicant's personal data:
 
 ${profileText}
+
+Today's date: ${iso} (also expressible as ${mm}/${dd}/${yyyy} or ${mm}-${dd}-${yyyy})
 
 Rules:
 - Return ONLY valid JSON, no explanation, no markdown, no code blocks
 - Map each field id to the exact value to fill in
 - For yes/no work authorization questions, always answer Yes
-- For race, gender, disability, veteran status — use "Prefer not to say" or equivalent option unless specified otherwise in the profile
+- For select/radio fields, return a value that exactly matches one of the provided options
 - If you cannot determine a value, use an empty string
-- For select/radio fields, return a value that exactly matches one of the provided options`;
+
+Phone number handling:
+- The applicant's full phone number including country code is in the profile
+- If a field is specifically for a country code, dial code, or phone prefix (label contains words like "country code", "dial code", "code", "prefix", "+1"), fill it with only the country code (e.g. "+1" or "1")
+- For the main phone number field, strip the country code and provide only the local number (e.g. "(660) 620 6614" not "+1 (660) 620 6614")
+- Match the format already implied by the field's placeholder if visible
+
+EEO / diversity fields (race, ethnicity, gender, disability, veteran status):
+- First try to use the value from the applicant's profile for that field
+- If the profile value does not exactly match any provided option, pick the closest available option in this order of preference: "Prefer not to say", "I prefer not to answer", "I do not wish to identify", "Decline to identify", "Decline to answer", "Choose not to disclose", "I do not wish to provide this information"
+- For race/ethnicity specifically: if none of the above phrases appear as options, prefer whichever option is most neutral or inclusive (e.g. "Two or more races", "Other") over any specific ethnicity — do NOT guess a specific race
+
+"How did you hear about us" / referral source:
+- For text inputs: answer "LinkedIn"
+- For select/radio: pick the closest available option among: "LinkedIn", "Job Board", "Online Job Board", "Indeed", "Company Website", "Online", "Other"
+
+Date fields:
+- For any field asking for today's date, the current date, application date, or submission date, use today's date formatted to match the field: YYYY-MM-DD for date inputs, MM/DD/YYYY for US text fields
+- Today is ${iso}`;
 }
 
 function buildUserMessage(fields) {
