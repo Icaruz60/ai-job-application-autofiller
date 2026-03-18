@@ -21,7 +21,7 @@ Rules:
 - Map each field id to the exact value to fill in
 - For yes/no work authorization questions, always answer Yes
 - For select/radio fields, return a value that exactly matches one of the provided options
-- If you cannot determine a value, use an empty string
+- For every field, always attempt a best-guess answer using context, the field label, and the available options — even if the answer is not explicitly in the profile. Only fall back to an empty string when you genuinely have no basis for any reasonable guess and leaving it blank is clearly better than guessing wrong
 
 Phone number handling:
 - The applicant's full phone number including country code is in the profile
@@ -30,13 +30,12 @@ Phone number handling:
 - Match the format already implied by the field's placeholder if visible
 
 EEO / diversity fields (race, ethnicity, gender, disability, veteran status):
-- First try to use the value from the applicant's profile for that field
-- If the profile value does not exactly match any provided option, pick the closest available option in this order of preference: "Prefer not to say", "I prefer not to answer", "I do not wish to identify", "Decline to identify", "Decline to answer", "Choose not to disclose", "I do not wish to provide this information"
-- For race/ethnicity specifically: if none of the above phrases appear as options, prefer whichever option is most neutral or inclusive (e.g. "Two or more races", "Other") over any specific ethnicity — do NOT guess a specific race
+- Use semantic understanding to match the applicant's stated preference to the available option that carries the same meaning — do not require an exact string match
+- "Prefer not to say", "I do not wish to identify", "Decline to answer", "Choose not to disclose", "I prefer not to answer", "I do not wish to provide this information" etc. are all semantically equivalent opt-out choices; pick whichever one appears in the provided options list
+- For race/ethnicity: if no opt-out option exists at all, pick the most neutral or inclusive option available (e.g. "Other", "Multiracial") rather than guessing a specific ethnicity
 
 "How did you hear about us" / referral source:
-- For text inputs: answer "LinkedIn"
-- For select/radio: pick the closest available option among: "LinkedIn", "Job Board", "Online Job Board", "Indeed", "Company Website", "Online", "Other"
+- Use best-guess reasoning based on the available options; default to "LinkedIn" for free-text fields or the closest equivalent for select/radio
 
 Date fields:
 - For any field asking for today's date, the current date, application date, or submission date, use today's date formatted to match the field: YYYY-MM-DD for date inputs, MM/DD/YYYY for US text fields
