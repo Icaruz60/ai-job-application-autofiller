@@ -38,7 +38,8 @@ EEO / diversity fields (race, ethnicity, gender, disability, veteran status):
 - Use best-guess reasoning based on the available options; default to "LinkedIn" for free-text fields or the closest equivalent for select/radio
 
 Terms, consent, and legal acknowledgment checkboxes:
-- For any checkbox asking the applicant to agree to terms of service, privacy policies, NDAs, consent statements, data processing agreements, or any similar legal acknowledgment required to submit the application, return true to check it
+- Check (return true) any checkbox that is required to submit the application: terms of service, privacy policies, NDAs, data processing agreements, candidate consent statements, and similar legal acknowledgments
+- Do NOT check (return false) any checkbox related to marketing, promotional emails, newsletters, product updates, or optional communications — even if pre-checked or phrased positively
 
 Date fields:
 - For any field asking for today's date, the current date, application date, or submission date, use today's date formatted to match the field: YYYY-MM-DD for date inputs, MM/DD/YYYY for US text fields
